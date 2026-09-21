@@ -1,6 +1,6 @@
-<img width="2458" height="1250" alt="Image" src="https://github.com/user-attachments/assets/100c7eb4-ed63-4c8b-880a-f53929aec3e1" />
+<img width="2489" height="1219" alt="Image" src="https://github.com/user-attachments/assets/a1567ab3-653b-41bb-b7c3-619106f3ca8e" />
 
-<img width="2474" height="1247" alt="Image" src="https://github.com/user-attachments/assets/b56a065f-275a-4732-acfe-81bc528e6838" />
+<img width="2499" height="1244" alt="Image" src="https://github.com/user-attachments/assets/7bf3aefc-73da-4ced-b8ca-d94d9ba8bff7" />
 
 
 # React + Vite
