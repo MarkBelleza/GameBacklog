@@ -15,7 +15,7 @@
 
 .game-poster {
   position: relative;
-  aspect-ratio: 2/3;
+  aspect-ratio: 16/9;
   width: 100%;
 }
 
