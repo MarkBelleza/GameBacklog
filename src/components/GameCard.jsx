@@ -39,7 +39,7 @@ function GameCard({ game }) {
     return <div className="game-card">
         <div className="game-poster">
             <img src={game.background_image} alt={game.name} />
-            <div className="game-overlay">
+            <div className={`game-overlay ${gameStatus ? 'status-selected' : ''}`}>
                 <button className={`favourite-btn ${favouriteStatus ? 'active' : ''}`} onClick={handleFavouriteClick}>
                     ♥
                 </button>

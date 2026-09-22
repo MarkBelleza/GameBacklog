@@ -54,6 +54,11 @@
   opacity: 1;
 }
 
+.game-overlay.status-selected {
+  opacity: 1;
+  background: none;
+}
+
 .favourite-btn {
   position: absolute;
   top: 1rem;
