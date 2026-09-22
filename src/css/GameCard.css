@@ -1,7 +1,7 @@
 .game-card {
   position: relative;
   border-radius: 8px;
-  overflow: hidden;
+  overflow: visible;
   background-color: #1a1a1a;
   transition: transform 0.2s;
   height: 100%;
@@ -13,10 +13,16 @@
   transform: translateY(-5px);
 }
 
+.game-card:focus-within {
+  z-index: 5;
+}
+
 .game-poster {
   position: relative;
   aspect-ratio: 16/9;
   width: 100%;
+  overflow: hidden;
+  border-radius: 8px 8px 0 0;
 }
 
 .game-poster img {
@@ -101,16 +107,159 @@
   font-size: 0.9rem;
 }
 
+.game-note {
+  width: 100%;
+  min-height: 4.5rem;
+  box-sizing: border-box;
+  padding: 0.6rem;
+  resize: vertical;
+  background-color: #242424;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 4px;
+  font: inherit;
+}
+
+.game-score {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.game-score label {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.game-score {
+  position: relative;
+}
+
+.score-btn,
+.score-search input,
+.score-search button {
+  padding: 0.45rem;
+  background-color: #242424;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 4px;
+  font: inherit;
+}
+
+.score-btn {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.score-btn:hover,
+.score-search button:hover {
+  background-color: #333;
+}
+
+.score-menu {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  z-index: 10;
+  width: 100%;
+  min-width: 180px;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  background-color: #1a1a1a;
+  border: 1px solid #555;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+.score-search {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.score-search input {
+  width: 100%;
+  min-width: 0;
+  outline: none;
+}
+
+.score-search button {
+  cursor: pointer;
+}
+
+.score-menu ul {
+  max-height: 365px;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.score-menu li button {
+  display: block;
+  width: 100%;
+  padding: 0.35rem;
+  background: none;
+  color: white;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.score-menu li button:hover,
+.score-menu li.active button {
+  background-color: #333;
+}
+
+.game-note:focus {
+  outline: 2px solid #2ed573;
+  outline-offset: 1px;
+}
+
 .user-rating {
   color: #ffd700;
   font-size: 0.9rem;
   margin-top: auto;
 }
 
-.icon-list-l1 {
-    background-position: -495px 0;
-    width: 15px;
-    height: 15px;
+.favourite-status-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.status-btn {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.status-btn:hover {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.status-btn.active {
+  color: #111;
+}
+
+.status-playing.active {
+  background-color: #3498db;
+  border-color: #3498db;
+}
+
+.status-finished.active {
+  background-color: #2ed573;
+  border-color: #2ed573;
+}
+
+.status-dropped.active {
+  background-color: #ff4757;
+  border-color: #ff4757;
 }
 
 @media (max-width: 768px) {
