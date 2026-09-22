@@ -45,3 +45,13 @@
     padding: 0.5rem;
   }
 }
+
+.navbar-logo a,
+.nav-link {
+  color: #ffffff;
+}
+
+.navbar-logo a:hover,
+.nav-link:hover {
+  color: #e612df;
+}
