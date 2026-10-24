@@ -112,6 +112,95 @@
   font-size: 0.9rem;
 }
 
+.game-platform {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.game-platform label {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.game-platform select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.45rem;
+  background-color: #242424;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 4px;
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.game-platform select:hover {
+  background-color: #2a2a2a;
+  border-color: #777;
+}
+
+.game-platform select:focus {
+  outline: 2px solid #2ed573;
+  outline-offset: 1px;
+}
+
+.game-platform select option {
+  background-color: #1a1a1a;
+  color: white;
+}
+
+/* Platform-specific colors */
+.game-platform select.platform-nintendo {
+  border: 3px solid #e60012;
+}
+
+.game-platform select.platform-xbox {
+  border: 3px solid #107c10;
+}
+
+.game-platform select.platform-playstation {
+  border: 3px solid #1436ce;
+}
+
+.game-platform select.platform-steam {
+  border: 3px solid #0d1646;
+}
+
+.game-platform select.platform-gog {
+  border: 3px solid #8638c7;
+}
+
+.game-platform select.platform-epic-games {
+  border: 3px solid #ffffff;
+}
+
+/* Keep platform colors slightly brighter on hover */
+.game-platform select.platform-nintendo:hover {
+  background-color: #c90010;
+}
+
+.game-platform select.platform-xbox:hover {
+  background-color: #0d660d;
+}
+
+.game-platform select.platform-playstation:hover {
+  background-color: #1436ce;
+}
+
+.game-platform select.platform-steam:hover {
+  background-color: #303b4f;
+}
+
+.game-platform select.platform-gog:hover {
+  background-color: #702eaa;
+}
+
+.game-platform select.platform-epic-games:hover {
+  background-color: #000000;
+}
+
 .game-note {
   width: 100%;
   min-height: 4.5rem;

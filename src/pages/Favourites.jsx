@@ -1,12 +1,20 @@
 import "../css/Favourites.css";
 import { useGameContext } from "../contexts/GameContext";
 import GameCard from "../components/GameCard";
+import { useAuthContext } from "../contexts/AuthContext";
 
 function Favourites() {
     const { favourites } = useGameContext();
+    const { user } = useAuthContext();
+
+    if (!user) {
+        return <div className="favourites-empty">
+            <h2>Favourites</h2>
+            <p>Please log in to view your favourite games.</p>
+        </div>
+    }
 
     if (favourites.length > 0) {
-        {/* Display the list of favourite games */ }
         return <div>
             <h2>Favourites</h2>
             <div className="games-grid">

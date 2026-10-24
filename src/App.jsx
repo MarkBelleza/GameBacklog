@@ -4,6 +4,8 @@ import { Routes, Route } from 'react-router-dom';
 import Favourites from './pages/Favourites';
 import NavBar from './components/NavBar';
 import { GameProvider } from './contexts/GameContext';
+import Register from './pages/Register';
+import Login from './pages/Login';
 
 function App() {
 
@@ -15,6 +17,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/favourites" element={<Favourites />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </main>
       </GameProvider>

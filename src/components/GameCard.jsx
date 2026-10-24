@@ -3,21 +3,20 @@ import { useGameContext } from "../contexts/GameContext";
 import { useState } from "react";
 
 function GameCard({ game }) {
-    const { isFavourite, addFavourite, removeFavourite, getGameStatus, toggleGameStatus, getGameNote, updateGameNote, getGameScore, updateGameScore } = useGameContext()
+    const { isFavourite, addFavourite, removeFavourite, getGamePlatform, updateGamePlatform, getGameStatus, toggleGameStatus, getGameNote, updateGameNote, saveGameNote, getGameScore, updateGameScore } = useGameContext()
     const favouriteStatus = isFavourite(game.id);
     const gameStatus = getGameStatus(game.id);
     const gameNote = getGameNote(game.id);
     const gameScore = getGameScore(game.id);
+    const gamePlatform = getGamePlatform(game.id);
     const [isScoreMenuOpen, setIsScoreMenuOpen] = useState(false);
 
     function handleFavouriteClick(e) {
         e.preventDefault();
         if (favouriteStatus) {
             removeFavourite(game.id);
-            console.log(favouriteStatus)
         } else {
             addFavourite(game);
-            console.log(favouriteStatus)
         }
     }
 
@@ -63,8 +62,33 @@ function GameCard({ game }) {
         </div>
         <div className="game-info">
             <h3>{game.name}</h3>
-            {/* <p>{game.description}</p> */}
             <p>{game.released}</p>
+            {favouriteStatus && (
+                <div className="game-platform">
+
+                    <select
+                        id={`platform-${game.id}`}
+                        className={
+                            gamePlatform
+                                ? `platform-${gamePlatform.toLowerCase().replace(/\s+/g, '-')}`
+                                : ''
+                        }
+                        value={gamePlatform}
+                        onChange={(e) =>
+                            updateGamePlatform(game.id, e.target.value)
+                        }
+                    >
+                        <option value="">Platform</option>
+                        <option value="Steam">Steam</option>
+                        <option value="Epic Games">Epic Games</option>
+                        <option value="GOG">GOG</option>
+                        <option value="PlayStation">PlayStation</option>
+                        <option value="Xbox">Xbox</option>
+                        <option value="Nintendo">Nintendo</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            )}
             {favouriteStatus && (
                 <>
                     <div className="game-score">
@@ -75,7 +99,7 @@ function GameCard({ game }) {
                             aria-expanded={isScoreMenuOpen}
                             aria-controls={`score-menu-${game.id}`}
                         >
-                            {gameScore ? `Score: ${gameScore}` : 'Score'}
+                            {gameScore ? `Score: ${gameScore}` : 'Score:'}
                         </button>
                         {isScoreMenuOpen && (
                             <form id={`score-menu-${game.id}`} className="score-menu" onSubmit={handleScoreSubmit}>
@@ -124,6 +148,7 @@ function GameCard({ game }) {
                         className="game-note"
                         value={gameNote}
                         onChange={(e) => updateGameNote(game.id, e.target.value)}
+                        onBlur={() => saveGameNote(game.id, gameNote)}
                         placeholder="Add a note..."
                         aria-label={`Notes for ${game.name}`}
                         rows="3"
