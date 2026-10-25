@@ -25,7 +25,7 @@ export const getGameById = async (gameId) => {
     return response.json();
 }
 
-const BACKEND_URL = "http://localhost:5000/api";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 //For the Backlog Page
 export const getSavedGames = async (token) => {
