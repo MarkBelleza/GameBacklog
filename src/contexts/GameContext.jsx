@@ -184,11 +184,11 @@ export const GameProvider = ({ children }) => {
 
     // Check if a game is already in favourites
     const isFavourite = (gameId) => {
-        return favourites.some((game) => game.id === gameId);
+        return Boolean(token) && favourites.some((game) => game.id === gameId);
     }
 
     // Get the status of a game (Playing, Finished, Dropped)
-    const getGameStatus = (gameId) => gameStatuses[gameId] || null;
+    const getGameStatus = (gameId) => token ? gameStatuses[gameId] || null : null;
 
     // Toggle the status of a game (Playing, Finished, Dropped)
     const toggleGameStatus = async (gameId, status) => {
@@ -217,7 +217,7 @@ export const GameProvider = ({ children }) => {
         }
     };
 
-    const getGameNote = (gameId) => gameNotes[gameId] || '';
+    const getGameNote = (gameId) => token ? gameNotes[gameId] || '' : '';
 
     const updateGameNote = (gameId, note) => {
         //Update UI
@@ -236,7 +236,7 @@ export const GameProvider = ({ children }) => {
         }
     }
 
-    const getGameScore = (gameId) => gameScores[gameId] ?? '';
+    const getGameScore = (gameId) => token ? gameScores[gameId] ?? '' : '';
 
     const updateGameScore = async (gameId, score) => {
         // newScore needs to be a number to work with db schema
@@ -263,7 +263,7 @@ export const GameProvider = ({ children }) => {
         }
     };
 
-    const getGamePlatform = (gameId) => gamePlatforms[gameId] ?? '';
+    const getGamePlatform = (gameId) => token ? gamePlatforms[gameId] ?? '' : '';
 
     const updateGamePlatform = async (gameId, platform) => {
         const newPlatform = platform || null;
