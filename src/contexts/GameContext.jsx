@@ -7,7 +7,7 @@ export const useGameContext = () => useContext(GameContext);
 
 
 export const GameProvider = ({ children }) => {
-    const { user, token } = useAuthContext();
+    const { token } = useAuthContext();
 
 
     const [favourites, setFavourites] = useState([]);
@@ -15,6 +15,9 @@ export const GameProvider = ({ children }) => {
     const [gameNotes, setGameNotes] = useState({});
     const [gameScores, setGameScores] = useState({});
     const [gamePlatforms, setGamePlatforms] = useState({});
+
+    //If the user is logged out, return an empty list
+    const visibleFavourites = token ? favourites : [];
 
     // useEffect(() => {
     //     const storedFavourites = localStorage.getItem('favourites');
@@ -39,11 +42,6 @@ export const GameProvider = ({ children }) => {
     // }, []);
     useEffect(() => {
         if (!token) {
-            setFavourites([]);
-            setGameStatuses({});
-            setGameNotes({});
-            setGameScores({});
-            setGamePlatforms({});
             return;
         }
 
@@ -295,7 +293,7 @@ export const GameProvider = ({ children }) => {
     // value provided specifies what data and functions are available to children
     return (
         <GameContext.Provider value={{
-            favourites, setFavourites, addFavourite, removeFavourite, isFavourite,
+            favourites: visibleFavourites, setFavourites, addFavourite, removeFavourite, isFavourite,
             getGamePlatform, updateGamePlatform,
             getGameStatus, toggleGameStatus,
             getGameNote, updateGameNote, saveGameNote,

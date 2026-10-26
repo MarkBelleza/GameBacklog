@@ -6,16 +6,33 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
   globalIgnores(['dist']),
+
+  // Frontend: React and browser code
   {
-    files: ['**/*.{js,jsx}'],
+    files: ['src/**/*.{js,jsx}'],
     extends: [
       js.configs.recommended,
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
     ],
+    rules: {
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowExportNames: ['useAuthContext', 'useGameContext'] },
+      ],
+    },
     languageOptions: {
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
+    },
+  },
+
+  // Backend: Node.js code
+  {
+    files: ['server/**/*.js'],
+    extends: [js.configs.recommended],
+    languageOptions: {
+      globals: globals.node,
     },
   },
 ])
