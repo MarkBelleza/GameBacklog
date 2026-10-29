@@ -9,14 +9,14 @@ function Favourites() {
 
     if (!user) {
         return <div className="favourites-empty">
-            <h2>Favourites</h2>
-            <p>Please log in to view your favourite games.</p>
+            <h2>Backlogged Games</h2>
+            <p>Please log in to view your backlogged games.</p>
         </div>
     }
 
     if (favourites.length > 0) {
         return <div>
-            <h2>Favourites</h2>
+            <h2>Hmm.. What's next?</h2>
             <div className="games-grid">
                 {favourites.map(
                     (game) => (
@@ -30,7 +30,7 @@ function Favourites() {
     }
 
     return <div className="favourites-empty">
-        <h2>Favourites</h2>
+        <h2>Backlogged Games</h2>
         <p>Click the ♥ icon on any game to add it here!</p>
     </div>
 }
