@@ -1,12 +1,12 @@
+import 'dotenv/config'; //This is important so that we can use the environment variables in our .env file. It loads the environment variables from the .env file into process.env.
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import authRoutes from './routes/auth.js';
 import authMiddleware from './middleware/authMiddleware.js';
 import gameRoutes from './routes/games.js';
+import igdbRoutes from './routes/igdb.js';
 
-dotenv.config();
 
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => {
@@ -19,7 +19,7 @@ mongoose.connect(process.env.MONGODB_URI)
 const app = express();
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173'
+    origin: process.env.FRONTEND_URL
     //Allows request only from our vercel frontend or our local
 }));
 
@@ -28,6 +28,15 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 
 app.use('/api/games', gameRoutes);
+
+app.use('/api/igdb', igdbRoutes);
+
+app.get('/api/health', (req, res) => {
+    res.status(200).json({
+        status: 'ok',
+        commit: process.env.RENDER_GIT_COMMIT || 'local' //RENDER_GIT_COMMIT is an environment variable Render automatically provides.
+    });
+});
 
 app.get('/api/test', (req, res) => {
     res.json({ message: 'API is working!' });

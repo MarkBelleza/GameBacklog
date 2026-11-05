@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build and Lint
+    name: Build, Lint, and E2E Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -29,3 +29,38 @@ jobs:
 
       - name: Build frontend
         run: npm run build
+
+      - name: Wait for Vercel and Render deployments
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          EXPECTED_COMMIT: ${{ github.sha }}
+          FRONTEND_URL: https://game-backlog-zeta.vercel.app
+          BACKEND_URL: https://gamebacklog-api-8tez.onrender.com
+        run: |
+          echo "Waiting for Vercel and Render deployments..."
+
+          for attempt in {1..80}; do
+            FRONTEND_COMMIT=$(curl -fsS "$FRONTEND_URL/version.json?commit=$EXPECTED_COMMIT" | jq -r '.commit // empty' 2>/dev/null || true)
+
+            BACKEND_COMMIT=$(curl -fsS "$BACKEND_URL/api/health?commit=$EXPECTED_COMMIT" | jq -r '.commit // empty' 2>/dev/null || true)
+
+            if [[ "$FRONTEND_COMMIT" == "$EXPECTED_COMMIT" && "$BACKEND_COMMIT" == "$EXPECTED_COMMIT" ]]; then
+              echo "Both deployments are running the expected commit!"
+              exit 0
+            fi
+
+            echo "Attempt $attempt/80: Waiting for deployments..."
+            echo "Frontend commit: ${FRONTEND_COMMIT:-not available}"
+            echo "Backend commit: ${BACKEND_COMMIT:-not available}"
+
+            sleep 15
+          done
+
+          echo "Timed out waiting for deployments."
+          exit 1
+
+      - name: Run Cypress E2E tests
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: npm run test:e2e
+        env:
+          CYPRESS_BASE_URL: https://game-backlog-zeta.vercel.app

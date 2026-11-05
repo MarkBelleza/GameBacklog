@@ -11,6 +11,22 @@ const gameSchema = new mongoose.Schema({
         required: true
     },
 
+    name: {
+        type: String,
+        required: true
+    },
+
+    coverUrl: {
+        type: String,
+        default: null
+    },
+
+    releaseDate: {
+        type: Date,
+        default: null
+    },
+
+
     platform: {
         type: String,
         enum: ['Steam', 'Epic Games', 'GOG', 'PlayStation', 'Xbox', 'Nintendo', 'Other', null],

@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import { useAuthContext } from './AuthContext';
-import { getSavedGames, saveGame, updateSavedGame, getGameById, deleteSavedGame } from '../services/api';
+import { getSavedGames, saveGame, updateSavedGame, deleteSavedGame } from '../services/api';
 
 const GameContext = createContext();
 export const useGameContext = () => useContext(GameContext);
@@ -47,25 +47,24 @@ export const GameProvider = ({ children }) => {
 
         const loadSavedGames = async () => {
             try {
-                //Get the gameIds and Statuses from MongoDB
+                // Get saved games and their details directly from MongoDB
                 const data = await getSavedGames(token);
 
-                //Use the gameIds to retrieve the game details from RAWG
-                const savedGames = await Promise.all(
-                    data.map(async (savedGame) => {
-                        const gameDetails = await getGameById(savedGame.gameId);
-
-                        /* return game details from RAWG combined 
-                         with the status infos from MongoDB */
-                        return {
-                            ...gameDetails,
-                            platform: savedGame.platform,
-                            status: savedGame.status,
-                            score: savedGame.score,
-                            note: savedGame.note,
-                        }
-                    })
-                )
+                // Convert MongoDB records into the game object shape used by the frontend
+                const savedGames = data.map((savedGame) => ({
+                    id: savedGame.gameId,
+                    name: savedGame.name,
+                    cover: savedGame.coverUrl
+                        ? { url: savedGame.coverUrl }
+                        : null,
+                    first_release_date: savedGame.releaseDate
+                        ? Math.floor(new Date(savedGame.releaseDate).getTime() / 1000)
+                        : null,
+                    platform: savedGame.platform,
+                    status: savedGame.status,
+                    score: savedGame.score,
+                    note: savedGame.note,
+                }));
 
                 setFavourites(savedGames)
                 //Note: savedGames is a list of objects (the games alongside its attributes/details)
@@ -76,8 +75,8 @@ export const GameProvider = ({ children }) => {
                 const platforms = {};
 
                 savedGames.forEach((game) => {
-                    /* Note the property ".gameID" from MongoDB is no longer in 
-                        savedGames. Use "game.id" which is from RAWG */
+                    /* MongoDB's gameId property is mapped to game.id above.
+                        We use game.id to keep our frontend game references consistent. */
 
                     if (game.status) {
                         statuses[game.id] = game.status;
@@ -137,7 +136,7 @@ export const GameProvider = ({ children }) => {
 
         try {
             // Save the game to MongoDB
-            await saveGame(game.id, token);
+            await saveGame(game, token);
 
             //Update UI after saving succeeds
             setFavourites((prevFavourites) => [...prevFavourites, game]);

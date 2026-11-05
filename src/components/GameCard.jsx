@@ -37,7 +37,15 @@ function GameCard({ game }) {
 
     return <div className="game-card">
         <div className="game-poster">
-            <img src={game.background_image} alt={game.name} />
+            <img
+                src={game.cover?.url
+                    ? (game.cover.url.startsWith('//')
+                        ? `https:${game.cover.url.replace('t_thumb', 't_1080p')}`
+                        : game.cover.url.replace('t_thumb', 't_1080p'))
+                    : '/placeholder.png'
+                }
+                alt={game.name}
+            />
             <div className={`game-overlay ${gameStatus ? 'status-selected' : ''}`}>
                 <button className={`favourite-btn ${favouriteStatus ? 'active' : ''}`} onClick={handleFavouriteClick}>
                     ♥
@@ -62,7 +70,11 @@ function GameCard({ game }) {
         </div>
         <div className="game-info">
             <h3>{game.name}</h3>
-            <p>{game.released}</p>
+            <p>
+                {game.first_release_date
+                    ? new Date(game.first_release_date * 1000).toLocaleDateString()
+                    : 'Release date unknown'}
+            </p>
             {favouriteStatus && (
                 <div className="game-platform">
 

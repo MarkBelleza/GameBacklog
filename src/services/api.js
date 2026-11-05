@@ -1,31 +1,21 @@
-const API_KEY = import.meta.env.VITE_RAWG_API_KEY;
-const BASE_URL = "https://api.rawg.io/api";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-
-//For the Home Page
+//For Home Page and Search Results
 export const getPopularGames = async () => {
-    const response = await fetch(`${BASE_URL}/games?key=${API_KEY}&ordering=-added`);
-    const data = await response.json();
-    return data.results;
-}
-
-export const searchGames = async (query) => {
-    const response = await fetch(`${BASE_URL}/games?key=${API_KEY}&search=${encodeURIComponent(query)}`);
-    const data = await response.json();
-    return data.results;
-}
-
-export const getGameById = async (gameId) => {
-    const response = await fetch(`${BASE_URL}/games/${gameId}?key=${API_KEY}`);
-
+    const response = await fetch(`${BACKEND_URL}/igdb/recently-released`);
     if (!response.ok) {
-        throw new Error("Failed to fetch game details");
+        throw new Error('Failed to fetch popular games');
     }
-
     return response.json();
 }
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+export const searchGames = async (query) => {
+    const response = await fetch(`${BACKEND_URL}/igdb/search?query=${encodeURIComponent(query)}`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch search results');
+    }
+    return response.json();
+}
 
 //For the Backlog Page
 export const getSavedGames = async (token) => {
@@ -42,21 +32,38 @@ export const getSavedGames = async (token) => {
     return response.json();
 };
 
-export const saveGame = async (gameId, token) => {
+export const saveGame = async (game, token) => {
+    const releaseDate = game.first_release_date
+        ? new Date(game.first_release_date * 1000).toISOString()
+        : null;
+
+    const coverUrl = game.cover?.url
+        ? game.cover.url.startsWith('//')
+            ? `https:${game.cover.url}`
+            : game.cover.url
+        : null;
+
     const response = await fetch(`${BACKEND_URL}/games`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ gameId }),
+        body: JSON.stringify({
+            gameId: game.id,
+            name: game.name,
+            coverUrl,
+            releaseDate,
+        }),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-        throw new Error('Failed to save game');
+        throw new Error(data.message || 'Failed to save game');
     }
 
-    return response.json();
+    return data.game;
 };
 
 export const updateSavedGame = async (gameId, updates, token) => {

@@ -26,3 +26,6 @@ dist-ssr
 .env
 .env.local
 .env.*.local
+
+# Local IGDB testing script
+server/testIgdb.js

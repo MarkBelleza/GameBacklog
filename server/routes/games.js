@@ -26,20 +26,48 @@ router.get('/', authMiddleware, async (req, res) => {
 // POST /api/games (Note: This route is protected and requires authentication from the JWT token)
 router.post('/', authMiddleware, async (req, res) => {
     try {
-        const { gameId } = req.body;
+        const { gameId, name, coverUrl, releaseDate } = req.body;
 
-
-        // Validate the RAWG gameId input
+        // Validate the IGDB game ID
         if (!Number.isInteger(gameId) || gameId <= 0) {
             return res.status(400).json({
                 message: "A valid game ID is required."
             });
         }
 
-        //Check whether this user has already saved this game
+        // Validate the game name
+        if (typeof name !== 'string' || !name.trim()) {
+            return res.status(400).json({
+                message: "A valid game name is required."
+            });
+        }
+
+        // Validate the cover URL
+        if (
+            coverUrl !== undefined &&
+            coverUrl !== null &&
+            typeof coverUrl !== 'string'
+        ) {
+            return res.status(400).json({
+                message: "Invalid cover URL."
+            });
+        }
+
+        // Validate the release date
+        if (
+            releaseDate !== undefined &&
+            releaseDate !== null &&
+            Number.isNaN(new Date(releaseDate).getTime())
+        ) {
+            return res.status(400).json({
+                message: "Invalid release date."
+            });
+        }
+
+        // Check whether this user has already saved this game
         const existingGame = await Game.findOne({
             userId: req.user.userId,
-            gameId: gameId
+            gameId
         });
 
         if (existingGame) {
@@ -48,22 +76,25 @@ router.post('/', authMiddleware, async (req, res) => {
             });
         }
 
-
         // Create the user's game record
         const game = new Game({
             userId: req.user.userId,
-            gameId: gameId
+            gameId,
+            name: name.trim(),
+            coverUrl: coverUrl ?? null,
+            releaseDate: releaseDate ?? null
         });
 
         await game.save();
 
-        return res.status(201).json({
-            game
-        });
+        return res.status(201).json({ game });
+
     } catch (error) {
         console.error('Error saving game:', error);
 
-        return res.status(500).json({ message: 'Error saving game' });
+        return res.status(500).json({
+            message: 'Error saving game'
+        });
     }
 
 });
@@ -73,7 +104,7 @@ router.patch('/:gameId', authMiddleware, async (req, res) => {
         const gameId = Number(req.params.gameId);
         const { platform, status, score, note } = req.body;
 
-        // Validate the RAWG gameId input
+        // Validate the IGDB gameId input
         if (!Number.isInteger(gameId) || gameId <= 0) {
             return res.status(400).json({
                 message: "A valid game ID is required."
