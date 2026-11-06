@@ -1,5 +1,5 @@
 .home {
-  padding: 2rem 0;
+  /* padding: 2rem 0; */
   width: 100%;
   box-sizing: border-box;
 }
@@ -60,4 +60,9 @@
   padding: 1rem;
   width: 100%;
   box-sizing: border-box;
+}
+
+.home-title{
+  text-align: center;
+  margin-bottom: 2rem;
 }

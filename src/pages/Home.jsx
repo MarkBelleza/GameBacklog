@@ -50,7 +50,7 @@ function Home() {
     }
 
     return <div className="home">
-        <h1 style={{ marginBottom: "30px" }}>Welcome to your Game Backlog</h1>
+        <h1 className="home-title">Welcome to your Game Backlog</h1>
 
         <form onSubmit={handleSearch} className="search-form">
             <input
