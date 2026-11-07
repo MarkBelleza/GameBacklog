@@ -21,8 +21,6 @@ const isTokenExpired = (token) => {
 };
 
 export const AuthProvider = ({ children }) => {
-    // const [user, setUser] = useState(null);
-    // const [token, setToken] = useState(null);
 
     /// Restore the user from local storage when the app loads
     const [user, setUser] = useState(() => {
@@ -45,7 +43,13 @@ export const AuthProvider = ({ children }) => {
 
     // Restore the token from localStorage
     const [token, setToken] = useState(() => {
-        return localStorage.getItem('token') || null;
+        const storedToken = localStorage.getItem('token');
+
+        if (!storedToken || isTokenExpired(storedToken)) {
+            return null;
+        }
+
+        return storedToken;
     });
 
 

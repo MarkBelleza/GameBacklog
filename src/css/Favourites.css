@@ -50,3 +50,11 @@
   animation: fadeIn 0.3s ease-out forwards;
 }
 
+.guest-notice-fixed {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(90%, 600px);
+    z-index: 1000;
+}

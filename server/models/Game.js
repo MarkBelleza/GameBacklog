@@ -26,6 +26,10 @@ const gameSchema = new mongoose.Schema({
         default: null
     },
 
+    dateAdded: {
+        type: Date,
+        default: Date.now
+    },
 
     platform: {
         type: String,

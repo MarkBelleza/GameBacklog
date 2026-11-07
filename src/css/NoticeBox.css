@@ -52,3 +52,12 @@
     padding: 0.9rem;
   }
 }
+
+.guest-notice-fixed {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(100%, 3000px);
+    z-index: 1000;
+}
