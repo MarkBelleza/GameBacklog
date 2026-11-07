@@ -2,7 +2,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 //For Home Page and Search Results
 export const getPopularGames = async () => {
-    const response = await fetch(`${BACKEND_URL}/igdb/recently-released`);
+    const response = await fetch(`${BACKEND_URL}/igdb/popular`);
     if (!response.ok) {
         throw new Error('Failed to fetch popular games');
     }

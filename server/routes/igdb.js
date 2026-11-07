@@ -26,6 +26,25 @@ router.get('/recently-released', async (req, res) => {
     }
 });
 
+//GET /api/igdb/popular
+router.get('/popular', async (req, res) => {
+    try {
+        const games = await makeIGDBRequest(
+            'games',
+            `
+                fields id, name, first_release_date, cover.url, hypes, follows;
+                sort hypes desc;
+                limit 30;
+            `
+        );
+
+        return res.status(200).json(games);
+    } catch (error) {
+        console.error('Error fetching popular games:', error);
+        return res.status(500).json({ message: 'Error fetching popular games' });
+    }
+});
+
 
 // GET /api/igdb/search?query=gameName
 router.get('/search', async (req, res) => {
