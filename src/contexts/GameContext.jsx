@@ -124,6 +124,8 @@ export const GameProvider = ({ children }) => {
 
         loadSavedGames();
 
+        // Clean up function to prevent state updates if the component unmounts before the 
+        // async operation (getSavedGames(token)) completes.
         return () => {
             cancelled = true;
         };
@@ -338,8 +340,8 @@ export const GameProvider = ({ children }) => {
     // value provided specifies what data and functions are available to children
     return (
         <GameContext.Provider value={{
-            favourites: visibleFavourites,
-            setFavourites: setVisibleFavourites, addFavourite, removeFavourite, isFavourite,
+            favourites: visibleFavourites, setFavourites: setVisibleFavourites,
+            addFavourite, removeFavourite, isFavourite,
             getGamePlatform, updateGamePlatform,
             getGameStatus, toggleGameStatus,
             getGameNote, updateGameNote, saveGameNote,
