@@ -169,10 +169,13 @@ export const GameProvider = ({ children }) => {
         // If the user is logged in, save the game to the backend
         try {
             // Save the game to MongoDB
-            await saveGame(game, token);
+            const savedGame = await saveGame(game, token);
 
             //Update UI after saving succeeds
-            setFavourites((prevFavourites) => [...prevFavourites, game]);
+            setFavourites((prevFavourites) => [
+                ...prevFavourites,
+                { ...game, dateAdded: savedGame.dateAdded }
+            ]);
         } catch (error) {
             console.error("Failed to add game to backlog", error)
         }

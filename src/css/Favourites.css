@@ -12,6 +12,44 @@
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+.favourites-sort {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 2rem;
+  color: #ffffff;
+}
+
+.favourites-sort select,
+.favourites-sort-direction {
+  min-height: 2.75rem;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font: inherit;
+}
+
+.favourites-sort select {
+  cursor: pointer;
+}
+
+.favourites-sort-direction {
+  cursor: pointer;
+}
+
+.favourites-sort select:focus-visible,
+.favourites-sort-direction:focus-visible {
+  outline: 2px solid #2ed573;
+  outline-offset: 2px;
+}
+
+.favourites-sort-direction:hover {
+  background-color: #333;
+}
+
 .favourites-empty {
   text-align: center;
   padding: 4rem 2rem;
@@ -48,5 +86,11 @@
 
 .movies-grid > * {
   animation: fadeIn 0.3s ease-out forwards;
+}
+
+@media (max-width: 480px) {
+  .favourites-sort {
+    flex-wrap: wrap;
+  }
 }
 
