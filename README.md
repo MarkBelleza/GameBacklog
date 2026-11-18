@@ -1,8 +1,10 @@
 Link: https://game-backlog-zeta.vercel.app
 
-<img width="2488" height="1236" alt="Image" src="https://github.com/user-attachments/assets/9948c856-0e31-412c-9ddc-19ba2ea83482" />
+<img width="2480" height="1246" alt="Home" src="https://github.com/user-attachments/assets/8f610d78-e150-4e43-b764-8f2198f317d6" />
 
-<img width="2505" height="1262" alt="Image" src="https://github.com/user-attachments/assets/cb7f41b0-8f3b-42ef-9385-8b99b03783bf" />
+<img width="2482" height="1271" alt="Backlog" src="https://github.com/user-attachments/assets/5e21dfa7-bc42-410a-9c94-1985abe40a79" />
 
-Backend hosted on Render, database hosted on MongoDB Atlas.
+
+Backend hosted on Render, Frontend hosted on Vercel and MongoDB Atlas for the database.
+
 Note: backend is using a free version of Render so it may take for first time login/register
