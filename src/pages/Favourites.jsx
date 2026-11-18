@@ -20,12 +20,14 @@ const randomHeaderMessages = [
     "No more doomscrolling!"
 ];
 const headerMessage = randomHeaderMessages[Math.floor(Math.random() * randomHeaderMessages.length)];
+const statusFilters = ["Playing", "Finished", "Dropped", "Uncategorized"];
 
 function Favourites() {
-    const { favourites, getGameScore } = useGameContext();
+    const { favourites, getGameScore, getGameStatus } = useGameContext();
     const { user } = useAuthContext();
     const [sortBy, setSortBy] = useState("dateAdded");
     const [sortDirection, setSortDirection] = useState("desc");
+    const [selectedStatuses, setSelectedStatuses] = useState(statusFilters);
 
     const getSortValue = (game) => {
         switch (sortBy) {
@@ -54,7 +56,12 @@ function Favourites() {
         }
     };
 
-    const sortedFavourites = [...favourites]
+    const filteredFavourites = favourites.filter((game) => {
+        const status = getGameStatus(game.id) || "Uncategorized";
+        return selectedStatuses.includes(status);
+    });
+
+    const sortedFavourites = [...filteredFavourites]
         .map((game, index) => ({ game, index, value: getSortValue(game) }))
         .sort((left, right) => {
             if (left.value === null && right.value !== null) return 1;
@@ -70,6 +77,20 @@ function Favourites() {
             return (sortDirection === "asc" ? comparison : -comparison)
                 || left.index - right.index;
         });
+
+    const handleStatusFilterChange = (status) => {
+        setSelectedStatuses((currentStatuses) => (
+            currentStatuses.includes(status)
+                ? currentStatuses.filter((currentStatus) => currentStatus !== status)
+                : [...currentStatuses, status]
+        ));
+    };
+
+    const handleAllFilterChange = () => {
+        setSelectedStatuses((currentStatuses) => (
+            currentStatuses.length === statusFilters.length ? [] : statusFilters
+        ));
+    };
 
     const handleSortChange = (event) => {
         const nextSortBy = event.target.value;
@@ -93,27 +114,55 @@ function Favourites() {
         return <div className="favourites">
             <h2>{headerMessage}</h2>
             <div className="favourites-sort">
-                <label htmlFor="favourites-sort-by">Sort by</label>
-                <select
-                    id="favourites-sort-by"
-                    value={sortBy}
-                    onChange={handleSortChange}
-                >
-                    <option value="name">Name (title)</option>
-                    <option value="releaseDate">Release date</option>
-                    <option value="dateAdded">Date added</option>
-                    <option value="score">Score</option>
-                </select>
-                <button
-                    type="button"
-                    className="favourites-sort-direction"
-                    onClick={() => setSortDirection((direction) => direction === "asc" ? "desc" : "asc")}
-                    aria-label={`Change sort order, currently ${directionLabel}`}
-                    title={`Change sort order (${directionLabel})`}
-                >
-                    {directionLabel}
-                    <span aria-hidden="true">{sortDirection === "asc" ? " ↑" : " ↓"}</span>
-                </button>
+                <fieldset className="favourites-sort-group">
+                    <legend>Sort by</legend>
+                    <div className="favourites-sort-options">
+                        <select
+                            id="favourites-sort-by"
+                            value={sortBy}
+                            onChange={handleSortChange}
+                        >
+                            <option value="name">Name (title)</option>
+                            <option value="releaseDate">Release date</option>
+                            <option value="dateAdded">Date added</option>
+                            <option value="score">Score</option>
+                        </select>
+                        <button
+                            type="button"
+                            className="favourites-sort-direction"
+                            onClick={() => setSortDirection((direction) => direction === "asc" ? "desc" : "asc")}
+                            aria-label={`Change sort order, currently ${directionLabel}`}
+                            title={`Change sort order (${directionLabel})`}
+                        >
+                            {directionLabel}
+                            <span aria-hidden="true">{sortDirection === "asc" ? " ↑" : " ↓"}</span>
+                        </button>
+                    </div>
+                </fieldset>
+                <fieldset className="favourites-status-filters">
+                    <legend>Filter by status</legend>
+                    <label className={selectedStatuses.length === statusFilters.length ? "selected" : ""}>
+                        <input
+                            type="checkbox"
+                            checked={selectedStatuses.length === statusFilters.length}
+                            onChange={handleAllFilterChange}
+                        />
+                        All
+                    </label>
+                    {statusFilters.map((status) => (
+                        <label
+                            key={status}
+                            className={selectedStatuses.includes(status) ? "selected" : ""}
+                        >
+                            <input
+                                type="checkbox"
+                                checked={selectedStatuses.includes(status)}
+                                onChange={() => handleStatusFilterChange(status)}
+                            />
+                            {status}
+                        </label>
+                    ))}
+                </fieldset>
             </div>
             <div className="games-grid">
                 {sortedFavourites.map(
@@ -124,6 +173,9 @@ function Favourites() {
                     )
                 )}
             </div>
+            {sortedFavourites.length === 0 && (
+                <p className="favourites-no-results">No games match the selected statuses.</p>
+            )}
             {!user && (
                 <div className="guest-notice-fixed">
                     <NoticeBox
