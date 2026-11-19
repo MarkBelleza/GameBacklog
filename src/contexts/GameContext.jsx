@@ -277,6 +277,7 @@ export const GameProvider = ({ children }) => {
                 await updateSavedGame(gameId, { note }, token);
             } catch (error) {
                 console.error("Failed to update note", error);
+                throw error;
             }
         }
     }
