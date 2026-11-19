@@ -15,9 +15,10 @@ const randomHeaderMessages = [
     "Remember to take breaks",
     "Don't forget to hydrate",
     "Game on!",
-    "Your next adventure awaits!",
-    "Remeber to be kind to yourself",
-    "No more doomscrolling!"
+    "Next adventure awaits!",
+    "Be kind to yourself",
+    "No more doomscrolling!",
+    "Next?"
 ];
 const headerMessage = randomHeaderMessages[Math.floor(Math.random() * randomHeaderMessages.length)];
 const statusFilters = ["Playing", "Finished", "Dropped", "Uncategorized"];
@@ -28,6 +29,7 @@ function Favourites() {
     const [sortBy, setSortBy] = useState("dateAdded");
     const [sortDirection, setSortDirection] = useState("desc");
     const [selectedStatuses, setSelectedStatuses] = useState(statusFilters);
+    const [searchQuery, setSearchQuery] = useState("");
 
     const getSortValue = (game) => {
         switch (sortBy) {
@@ -56,9 +58,12 @@ function Favourites() {
         }
     };
 
+    const normalizedSearchQuery = searchQuery.trim().toLocaleLowerCase();
     const filteredFavourites = favourites.filter((game) => {
         const status = getGameStatus(game.id) || "Uncategorized";
-        return selectedStatuses.includes(status);
+        const matchesStatus = selectedStatuses.includes(status);
+        const matchesSearch = (game.name ?? "").toLocaleLowerCase().includes(normalizedSearchQuery);
+        return matchesStatus && matchesSearch;
     });
 
     const sortedFavourites = [...filteredFavourites]
@@ -102,6 +107,10 @@ function Favourites() {
          */
     };
 
+    const handleSearch = (event) => {
+        event.preventDefault();
+    }
+
     if (favourites.length > 0) {
         const directionLabel = sortBy === "dateAdded"
             ? (sortDirection === "desc" ? "Newest first" : "Oldest first")
@@ -113,68 +122,98 @@ function Favourites() {
 
         return <div className="favourites">
             <h2>{headerMessage}</h2>
-            <div className="favourites-sort">
-                <fieldset className="favourites-sort-group">
-                    <legend>Sort by</legend>
-                    <div className="favourites-sort-options">
-                        <select
-                            id="favourites-sort-by"
-                            value={sortBy}
-                            onChange={handleSortChange}
-                        >
-                            <option value="name">Name (title)</option>
-                            <option value="releaseDate">Release date</option>
-                            <option value="dateAdded">Date added</option>
-                            <option value="score">Score</option>
-                        </select>
-                        <button
-                            type="button"
-                            className="favourites-sort-direction"
-                            onClick={() => setSortDirection((direction) => direction === "asc" ? "desc" : "asc")}
-                            aria-label={`Change sort order, currently ${directionLabel}`}
-                            title={`Change sort order (${directionLabel})`}
-                        >
-                            {directionLabel}
-                            <span aria-hidden="true">{sortDirection === "asc" ? " ↑" : " ↓"}</span>
-                        </button>
-                    </div>
-                </fieldset>
-                <fieldset className="favourites-status-filters">
-                    <legend>Filter by status</legend>
-                    <label className={selectedStatuses.length === statusFilters.length ? "selected" : ""}>
-                        <input
-                            type="checkbox"
-                            checked={selectedStatuses.length === statusFilters.length}
-                            onChange={handleAllFilterChange}
-                        />
-                        All
-                    </label>
-                    {statusFilters.map((status) => (
-                        <label
-                            key={status}
-                            className={selectedStatuses.includes(status) ? "selected" : ""}
-                        >
-                            <input
-                                type="checkbox"
-                                checked={selectedStatuses.includes(status)}
-                                onChange={() => handleStatusFilterChange(status)}
-                            />
-                            {status}
-                        </label>
-                    ))}
-                </fieldset>
+            <div className="favourites-toolbar">
+                <div className="favourites-sort">
+                    <fieldset className="favourites-sort-group">
+                        <legend>Sort by</legend>
+                        <div className="favourites-sort-options">
+                            <div className="favourites-sort-select-wrap">
+                                <select
+                                    id="favourites-sort-by"
+                                    value={sortBy}
+                                    onChange={handleSortChange}
+                                >
+                                    <option value="name">Name (title)</option>
+                                    <option value="releaseDate">Release date</option>
+                                    <option value="dateAdded">Date added</option>
+                                    <option value="score">Score</option>
+                                </select>
+                            </div>
+                            <button
+                                type="button"
+                                className="favourites-sort-direction"
+                                onClick={() => setSortDirection((direction) => direction === "asc" ? "desc" : "asc")}
+                                aria-label={`Change sort order, currently ${directionLabel}`}
+                                title={`Change sort order (${directionLabel})`}
+                            >
+                                {directionLabel}
+                                <span aria-hidden="true">{sortDirection === "asc" ? " ↑" : " ↓"}</span>
+                            </button>
+                        </div>
+                    </fieldset>
+                    <fieldset className="favourites-status-filter-group">
+                        <legend>Filter</legend>
+                        <details className="favourites-status-dropdown">
+                            <summary>
+                                <span className="favourites-status-selection">
+                                    {selectedStatuses.length === statusFilters.length
+                                        ? "All statuses"
+                                        : selectedStatuses.length === 0
+                                            ? "No statuses"
+                                            : `${selectedStatuses.length} selected`}
+                                </span>
+                            </summary>
+                            <fieldset className="favourites-status-options">
+                                <legend>By status</legend>
+                                <label className={selectedStatuses.length === statusFilters.length ? "selected all-status-filter" : ""}>
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedStatuses.length === statusFilters.length}
+                                        onChange={handleAllFilterChange}
+                                    />
+                                    All
+                                </label>
+                                {statusFilters.map((status) => (
+                                    <label
+                                        key={status}
+                                        className={selectedStatuses.includes(status)
+                                            ? `selected status-filter-${status.toLowerCase()}`
+                                            : ""}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedStatuses.includes(status)}
+                                            onChange={() => handleStatusFilterChange(status)}
+                                        />
+                                        {status}
+                                    </label>
+                                ))}
+                            </fieldset>
+                        </details>
+                    </fieldset>
+                </div>
+                <form onSubmit={handleSearch} className="search-form favourites-search">
+                    <input
+                        type="text"
+                        placeholder="Search games..."
+                        className="search-input"
+                        aria-label="Search games in your backlog"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                </form>
             </div>
             <div className="games-grid">
-                {sortedFavourites.map(
-                    ({ game }) => (
-                        (
-                            <GameCard key={game.id} game={game} />
-                        )
-                    )
-                )}
+                {sortedFavourites.map(({ game }) => (
+                    <GameCard key={game.id} game={game} />
+                ))}
             </div>
             {sortedFavourites.length === 0 && (
-                <p className="favourites-no-results">No games match the selected statuses.</p>
+                <p className="favourites-no-results">
+                    {normalizedSearchQuery
+                        ? "No backlog games match your search and selected statuses."
+                        : "No games match the selected statuses."}
+                </p>
             )}
             {!user && (
                 <div className="guest-notice-fixed">

@@ -28,6 +28,11 @@
   background-color: rgba(255, 255, 255, 0.1);
 }
 
+.nav-link.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #e612df;
+}
+
 @media (max-width: 768px) {
   .navbar {
     padding: 1rem;

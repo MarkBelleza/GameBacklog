@@ -73,7 +73,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s;
+  opacity: 0;
+  pointer-events: none;
+  transition: background-color 0.2s, opacity 0.2s;
+}
+
+.game-card:hover .favourite-btn,
+.game-card:focus-within .favourite-btn {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .favourite-btn:hover {
@@ -369,5 +377,12 @@
     width: 32px;
     height: 32px;
     font-size: 1.2rem;
+  }
+}
+
+@media (hover: none) {
+  .favourite-btn {
+    opacity: 1;
+    pointer-events: auto;
   }
 }
