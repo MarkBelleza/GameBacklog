@@ -28,6 +28,12 @@ describe('Game backlog', () => {
         backlog.navigateToPage();
         backlog.verifyGame(game.name);
 
+        //Check that game has been added to local storage before reloading
+        cy.window().should((window) => {
+            const favourites = JSON.parse(window.localStorage.getItem('favourites') || '[]');
+            expect(favourites.some((favourite) => favourite.id === game.id)).to.be.true;
+        });
+
         cy.reload();
         backlog.verifyGame(game.name);
     });
@@ -53,6 +59,12 @@ describe('Game backlog', () => {
         backlog.verifyGameStatusNotSelected(game.name, 'Finished');
         backlog.verifyGameStatusNotSelected(game.name, 'Dropped');
 
+        //Check that game has been added to local storage before reloading
+        cy.window().should((window) => {
+            const statuses = JSON.parse(window.localStorage.getItem('gameStatuses') || '{}');
+            expect(statuses[game.id]).to.equal('Playing');
+        });
+
         cy.reload();
         backlog.verifyGameStatus(game.name, 'Playing');
         backlog.verifyGameStatusNotSelected(game.name, 'Finished');
@@ -73,6 +85,12 @@ describe('Game backlog', () => {
         backlog.verifyGameStatusNotSelected(game.name, 'Playing');
         backlog.verifyGameStatusNotSelected(game.name, 'Finished');
         backlog.verifyGameStatusNotSelected(game.name, 'Dropped');
+
+        //Check that game has been added to local storage before reloading
+        cy.window().should((window) => {
+            const statuses = JSON.parse(window.localStorage.getItem('gameStatuses') || '{}');
+            expect(statuses).not.to.have.property(String(game.id));
+        });
 
         cy.reload();
         backlog.verifyGameStatusNotSelected(game.name, 'Playing');
