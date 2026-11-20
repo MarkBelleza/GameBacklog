@@ -50,6 +50,17 @@ class GameBacklogHome {
 
     }
 
+    getGameCard(gameName) {
+        return cy.get(this.gameCard).filter((_, card) => {
+            const title = card.querySelector(this.gameCardName);
+            return title && title.innerText.trim() === gameName;
+        });
+    }
+
+    toggleFavourite(gameName) {
+        this.getGameCard(gameName).find('.favourite-btn').focus().click();
+    }
+
 
     verifyNoGameCardsVisible() {
         cy.get(this.loadingMessage)
