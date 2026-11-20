@@ -64,10 +64,17 @@ function GameCard({ game }) {
 
     function handleScoreSubmit(e) {
         e.preventDefault();
-        const score = Number(e.currentTarget.elements.score.value);
+        const scoreValue = e.currentTarget.elements.score.value;
 
+        if (scoreValue === "") {
+            updateGameScore(game.id, "");
+            setIsScoreMenuOpen(false);
+            return;
+        }
+
+        const score = Number(scoreValue);
         if (score >= 1 && score <= 10) {
-            updateGameScore(game.id, e.currentTarget.elements.score.value);
+            updateGameScore(game.id, scoreValue);
             setIsScoreMenuOpen(false);
         }
     }
