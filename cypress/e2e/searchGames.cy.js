@@ -1,6 +1,6 @@
 import GameBacklogHome from '../pages/GameBacklogHome';
 
-describe('Search Games', () => {
+describe('Search Games using IGDB API', () => {
 
     const home = new GameBacklogHome();
 

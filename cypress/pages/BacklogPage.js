@@ -103,6 +103,12 @@ class BacklogPage {
         this.getGameCard(gameName).find('select[id^="platform-"]').select(platform);
     }
 
+    verifyGamePlatform(gameName, platform) {
+        this.getGameCard(gameName)
+            .find('select[id^="platform-"]')
+            .should('have.value', platform);
+    }
+
     setGameScore(gameName, score) {
         this.getGameCard(gameName).find('.score-btn').click();
 
@@ -114,6 +120,25 @@ class BacklogPage {
         this.getGameCard(gameName).find('button[type="submit"]').click();
     }
 
+    setGameScoreFromPreset(gameName, score) {
+        this.getGameCard(gameName).find('.score-btn').click();
+        this.getGameCard(gameName)
+            .contains('.score-menu li button', `${score} (`)
+            .click();
+    }
+
+    verifyGameScore(gameName, score) {
+        this.getGameCard(gameName)
+            .find('.score-btn')
+            .should('contain.text', `Score: ${score}`);
+    }
+
+    verifyGameScoreNotSet(gameName) {
+        this.getGameCard(gameName)
+            .find('.score-btn')
+            .should('have.text', 'Score:');
+    }
+
     saveGameNote(gameName, note) {
         this.getGameCard(gameName).find('.game-note-button').click();
         cy.get('.game-note-dialog textarea').clear();
@@ -121,6 +146,19 @@ class BacklogPage {
             cy.get('.game-note-dialog textarea').type(note);
         }
         cy.get('.game-note-save').click();
+    }
+
+    verifyGameNotePreview(gameName, preview) {
+        this.getGameCard(gameName)
+            .find('.game-note-button')
+            .should('contain.text', preview);
+    }
+
+    verifyGameNote(gameName, note) {
+        this.getGameCard(gameName).find('.game-note-button')
+            .should('have.class', 'has-note-preview')
+            .click();
+        cy.get('.game-note-dialog textarea').should('have.value', note);
     }
 
     removeGame(gameName) {
