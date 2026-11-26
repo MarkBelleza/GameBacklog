@@ -219,8 +219,8 @@ function Favourites() {
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </form>
-                <div className="favourites-progress">
-                    <span className="favourites-progress-label">Completion</span>
+                <fieldset className="favourites-progress">
+                    <legend>Completion</legend>
                     <div
                         className="favourites-progress-bar"
                         role="progressbar"
@@ -244,7 +244,7 @@ function Favourites() {
                         />
                     </div>
                     <span className="favourites-progress-percentage">{completionPercentage}%</span>
-                </div>
+                </fieldset>
             </div>
             <div className="games-grid">
                 {sortedFavourites.map(({ game }) => (
