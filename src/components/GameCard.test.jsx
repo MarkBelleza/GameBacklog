@@ -135,12 +135,13 @@ describe('GameCard', () => {
             selectedStatus = selectedStatus === status ? null : status;
         });
         const { rerender } = render(<GameCard game={game} />);
-        const playingButton = screen.getByRole('button', { name: 'Playing' });
 
+        const playingButton = screen.getByRole('button', { name: 'Playing' });
         await user.click(playingButton);
+        expect(toggleGameStatus).toHaveBeenCalledWith(game.id, 'Playing');
+
         rerender(<GameCard game={game} />);
 
-        expect(toggleGameStatus).toHaveBeenCalledWith(game.id, 'Playing');
         expect(playingButton).toHaveClass('active');
     });
 
@@ -154,14 +155,15 @@ describe('GameCard', () => {
             selectedStatus = selectedStatus === status ? null : status;
         });
         const { rerender } = render(<GameCard game={game} />);
-        const playingButton = screen.getByRole('button', { name: 'Playing' });
 
+        const playingButton = screen.getByRole('button', { name: 'Playing' });
         expect(playingButton).toHaveClass('active');
 
         await user.click(playingButton);
+        expect(toggleGameStatus).toHaveBeenCalledWith(game.id, 'Playing');
+
         rerender(<GameCard game={game} />);
 
-        expect(toggleGameStatus).toHaveBeenCalledWith(game.id, 'Playing');
         expect(playingButton).not.toHaveClass('active');
     });
 
@@ -175,12 +177,13 @@ describe('GameCard', () => {
             selectedPlatform = platform;
         });
         const { rerender } = render(<GameCard game={game} />);
-        const platformSelect = screen.getByRole('combobox');
 
+        const platformSelect = screen.getByRole('combobox');
         await user.selectOptions(platformSelect, 'Steam');
+        expect(updateGamePlatform).toHaveBeenCalledWith(game.id, 'Steam');
+
         rerender(<GameCard game={game} />);
 
-        expect(updateGamePlatform).toHaveBeenCalledWith(game.id, 'Steam');
         expect(platformSelect).toHaveValue('Steam');
         expect(platformSelect).toHaveClass('platform-steam');
     });
@@ -195,14 +198,15 @@ describe('GameCard', () => {
             selectedPlatform = platform;
         });
         const { rerender } = render(<GameCard game={game} />);
-        const platformSelect = screen.getByRole('combobox');
 
+        const platformSelect = screen.getByRole('combobox');
         expect(platformSelect).toHaveValue('Steam');
 
         await user.selectOptions(platformSelect, '');
+        expect(updateGamePlatform).toHaveBeenCalledWith(game.id, '');
+
         rerender(<GameCard game={game} />);
 
-        expect(updateGamePlatform).toHaveBeenCalledWith(game.id, '');
         expect(platformSelect).toHaveValue('');
         expect(platformSelect).not.toHaveClass('platform-steam');
     });
@@ -221,9 +225,10 @@ describe('GameCard', () => {
         await user.click(screen.getByRole('button', { name: 'Score:' }));
         await user.type(screen.getByRole('textbox', { name: 'Score for Scored Game' }), '8');
         await user.click(screen.getByRole('button', { name: 'Save score' }));
+        expect(updateGameScore).toHaveBeenCalledWith(game.id, '8');
+
         rerender(<GameCard game={game} />);
 
-        expect(updateGameScore).toHaveBeenCalledWith(game.id, '8');
         expect(screen.getByRole('button', { name: 'Score: 8' })).toBeInTheDocument();
     });
 
@@ -241,9 +246,10 @@ describe('GameCard', () => {
         await user.click(screen.getByRole('button', { name: 'Score: 8' }));
         await user.clear(screen.getByRole('textbox', { name: 'Score for Scored Game' }));
         await user.click(screen.getByRole('button', { name: 'Save score' }));
+        expect(updateGameScore).toHaveBeenCalledWith(game.id, '');
+
         rerender(<GameCard game={game} />);
 
-        expect(updateGameScore).toHaveBeenCalledWith(game.id, '');
         expect(screen.getByRole('button', { name: 'Score:' })).toBeInTheDocument();
     });
 
