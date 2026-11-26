@@ -42,6 +42,60 @@
   padding: 0;
 }
 
+.favourites-progress {
+  grid-column: 3;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: min(100%, 420px);
+  min-width: 0;
+  color: #ffffff;
+}
+
+.favourites-progress-label {
+  color: #bbbbbb;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.favourites-progress-bar {
+  display: flex;
+  flex: 1;
+  min-width: 3rem;
+  height: 1rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background-color: #777777;
+}
+
+.favourites-progress-bar span {
+  display: block;
+  flex: 0 0 auto;
+  min-width: 0;
+  height: 100%;
+}
+
+.favourites-progress-finished {
+  background-color: #2ed573;
+}
+
+.favourites-progress-playing {
+  background-color: #3498db;
+}
+
+.favourites-progress-uncategorized {
+  background-color: #777777;
+}
+
+.favourites-progress-percentage {
+  min-width: 3.2rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
 .favourites-search .search-input {
   width: 100%;
   min-width: 0;
@@ -347,12 +401,17 @@
   }
 
   .favourites-toolbar .favourites-sort,
-  .favourites-toolbar .favourites-search {
+  .favourites-toolbar .favourites-search,
+  .favourites-toolbar .favourites-progress {
     grid-column: 1;
   }
 
   .favourites-toolbar .favourites-search {
     justify-self: center;
+  }
+
+  .favourites-toolbar .favourites-progress {
+    justify-self: end;
   }
 }
 

@@ -31,6 +31,23 @@ function Favourites() {
     const [selectedStatuses, setSelectedStatuses] = useState(statusFilters);
     const [searchQuery, setSearchQuery] = useState("");
 
+    const statusCounts = favourites.reduce((counts, game) => {
+        const status = getGameStatus(game.id);
+
+        if (status === "Finished" || status === "Dropped") {
+            counts.finishedOrDropped += 1;
+        } else if (status === "Playing") {
+            counts.playing += 1;
+        } else {
+            counts.uncategorized += 1;
+        }
+
+        return counts;
+    }, { finishedOrDropped: 0, playing: 0, uncategorized: 0 });
+    const completionPercentage = Math.round(
+        ((statusCounts.finishedOrDropped) / favourites.length) * 100
+    );
+
     const getSortValue = (game) => {
         switch (sortBy) {
             case "name":
@@ -202,6 +219,32 @@ function Favourites() {
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </form>
+                <div className="favourites-progress">
+                    <span className="favourites-progress-label">Completion</span>
+                    <div
+                        className="favourites-progress-bar"
+                        role="progressbar"
+                        aria-label="Games with a completion status"
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-valuenow={completionPercentage}
+                        aria-valuetext={`${completionPercentage}% of games are playing, finished, or dropped`}
+                    >
+                        <span
+                            className="favourites-progress-finished"
+                            style={{ width: `${(statusCounts.finishedOrDropped / favourites.length) * 100}%` }}
+                        />
+                        <span
+                            className="favourites-progress-playing"
+                            style={{ width: `${(statusCounts.playing / favourites.length) * 100}%` }}
+                        />
+                        <span
+                            className="favourites-progress-uncategorized"
+                            style={{ width: `${(statusCounts.uncategorized / favourites.length) * 100}%` }}
+                        />
+                    </div>
+                    <span className="favourites-progress-percentage">{completionPercentage}%</span>
+                </div>
             </div>
             <div className="games-grid">
                 {sortedFavourites.map(({ game }) => (
