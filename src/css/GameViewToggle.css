@@ -1,0 +1,28 @@
+.game-view-toggle {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0 1rem;
+}
+
+.game-view-toggle button {
+  min-height: 2.5rem;
+  padding: 0.5rem 0.85rem;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background-color: #242424;
+  color: #ddd;
+  font: inherit;
+  cursor: pointer;
+}
+
+.game-view-toggle button[aria-pressed="true"] {
+  border-color: #e612df;
+  background-color: rgba(230, 18, 223, 0.16);
+  color: #fff;
+}
+
+.game-view-toggle button:focus-visible {
+  outline: 2px solid #2ed573;
+  outline-offset: 2px;
+}

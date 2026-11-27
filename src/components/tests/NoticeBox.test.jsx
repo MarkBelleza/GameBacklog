@@ -4,7 +4,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import NoticeBox from './NoticeBox';
+import NoticeBox from '../NoticeBox';
 
 describe('NoticeBox', () => {
     beforeEach(() => {

@@ -2,6 +2,8 @@ class BacklogPage {
     page = '.favourites, .favourites-empty';
     gameCard = '.game-card';
     gameCardName = '.game-info h3';
+    gridViewButton = '.game-view-toggle button:contains("Card view")';
+    listViewButton = '.game-view-toggle button:contains("List view")';
     searchField = '.favourites-search .search-input';
     sortSelect = '#favourites-sort-by';
     sortDirectionButton = '.favourites-sort-direction';
@@ -18,6 +20,22 @@ class BacklogPage {
     navigateToPage() {
         cy.get('.navbar-links').contains('a', 'Backlogged').click();
         cy.get(this.page).should('be.visible');
+    }
+
+    selectGridView() {
+        cy.get(this.gridViewButton).should('be.visible').click();
+    }
+
+    selectListView() {
+        cy.get(this.listViewButton).should('be.visible').click();
+    }
+
+    verifyGridViewSelected() {
+        cy.get(this.gridViewButton).should('have.attr', 'aria-pressed', 'true');
+    }
+
+    verifyListViewSelected() {
+        cy.get(this.listViewButton).should('have.attr', 'aria-pressed', 'true');
     }
 
     searchGames(query) {
@@ -84,7 +102,10 @@ class BacklogPage {
     }
 
     setGameStatus(gameName, status) {
-        this.getGameCard(gameName).contains('.status-btn', status).focus().click();
+        this.getGameCard(gameName).find('.favourite-btn').focus({ force: true });
+        this.getGameCard(gameName).contains('.status-btn', status)
+            .should('be.visible')
+            .click();
     }
 
     verifyGameStatus(gameName, status) {

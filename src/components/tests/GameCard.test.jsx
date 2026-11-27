@@ -4,10 +4,10 @@ import { cleanup, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { useGameContext } from '../contexts/GameContext';
-import GameCard from './GameCard';
+import { useGameContext } from '../../contexts/GameContext';
+import GameCard from '../GameCard';
 
-vi.mock('../contexts/GameContext', () => ({
+vi.mock('../../contexts/GameContext', () => ({
     useGameContext: vi.fn(),
 }));
 
@@ -66,6 +66,59 @@ describe('GameCard', () => {
             'src',
             'https://images.example.com/t_1080p/cover.jpg'
         );
+    });
+
+    it('renders list layout with backlog controls and actions', async () => {
+        const user = userEvent.setup();
+        const game = { id: 21, name: 'List Game' };
+        gameContext.isFavourite.mockReturnValue(true);
+
+        render(<GameCard game={game} layout="list" />);
+
+        expect(document.querySelector('.game-list')).toBeInTheDocument();
+        expect(screen.getByRole('img', { name: 'List Game' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Playing' })).toBeInTheDocument();
+        expect(screen.getByRole('combobox')).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Score:' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Add note for List Game' })).toBeInTheDocument();
+
+        //Test the status and platform fields
+        await user.click(screen.getByRole('button', { name: 'Playing' }));
+        await user.selectOptions(screen.getByRole('combobox'), 'Steam');
+        expect(toggleGameStatus).toHaveBeenCalledWith(game.id, 'Playing');
+        expect(updateGamePlatform).toHaveBeenCalledWith(game.id, 'Steam');
+
+        //Test the score field
+        await user.click(screen.getByRole('button', { name: 'Score:' }));
+        await user.type(screen.getByRole('textbox', { name: 'Score for List Game' }), '8');
+        await user.click(screen.getByRole('button', { name: 'Save score' }));
+        expect(updateGameScore).toHaveBeenCalledWith(game.id, '8');
+
+        //Test the notes field
+        await user.click(screen.getByRole('button', { name: 'Add note for List Game' }));
+        expect(screen.queryByRole('dialog')).toBeInTheDocument();
+        await user.type(screen.getByRole('textbox', { name: 'Notes for List Game' }), 'Play after work');
+        await user.click(screen.getByRole('button', { name: 'Save note' }));
+        expect(saveGameNote).toHaveBeenCalledWith(game.id, 'Play after work');
+        expect(updateGameNote).toHaveBeenCalledWith(game.id, 'Play after work');
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+
+    it('shows the full note in list view while keeping the card preview to 36 characters', () => {
+        const game = { id: 23, name: 'Long Note Game' };
+        const note = 'A long note that should be visible in full while browsing the list';
+        gameContext.isFavourite.mockReturnValue(true);
+        gameContext.getGameNote.mockReturnValue(note);
+
+        const { rerender } = render(<GameCard game={game} layout="list" />);
+        const noteButtonName = `View or edit note for ${game.name}`;
+
+        expect(screen.getByRole('button', { name: noteButtonName })).toHaveTextContent(note);
+
+        rerender(<GameCard game={game} layout="card" />);
+
+        expect(screen.getByRole('button', { name: noteButtonName }))
+            .toHaveTextContent(`${note.slice(0, 36)}…`);
     });
 
     it('uses fallback text and image when game details are missing', () => {

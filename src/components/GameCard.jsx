@@ -3,15 +3,17 @@ import { useGameContext } from "../contexts/GameContext";
 import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-function GameCard({ game }) {
+function GameCard({ game, layout = "card" }) {
     const { isFavourite, addFavourite, removeFavourite, getGamePlatform, updateGamePlatform, getGameStatus, toggleGameStatus, getGameNote, updateGameNote, saveGameNote, getGameScore, updateGameScore } = useGameContext()
     const favouriteStatus = isFavourite(game.id);
     const gameStatus = getGameStatus(game.id);
     const gameNote = getGameNote(game.id);
     const notePreview = gameNote.trim().replace(/\s+/g, " ");
-    const noteButtonText = notePreview
-        ? `${notePreview.slice(0, 36)}${notePreview.length > 36 ? "…" : ""}`
-        : "Add note";
+    const noteButtonText = layout === "list"
+        ? `${notePreview.slice(0, 445)}${notePreview.length > 445 ? "…" : ""}` || "Add note"
+        : notePreview
+            ? `${notePreview.slice(0, 36)}${notePreview.length > 36 ? "…" : ""}`
+            : "Add note";
     const gameScore = getGameScore(game.id);
     const gamePlatform = getGamePlatform(game.id);
     const [isScoreMenuOpen, setIsScoreMenuOpen] = useState(false);
@@ -62,6 +64,18 @@ function GameCard({ game }) {
         toggleGameStatus(game.id, e.currentTarget.dataset.status);
     }
 
+    function renderFavouriteButton(className = "") {
+        return (
+            <button
+                type="button"
+                className={`favourite-btn ${favouriteStatus ? "active" : ""} ${className}`}
+                onClick={handleFavouriteClick}
+            >
+                ♥
+            </button>
+        );
+    }
+
     function handleScoreSubmit(e) {
         e.preventDefault();
         const scoreValue = e.currentTarget.elements.score.value;
@@ -80,7 +94,7 @@ function GameCard({ game }) {
     }
 
     return <>
-        <div className="game-card">
+        <div className={`game-card${layout === "list" ? ` game-list${favouriteStatus ? " game-list-favourited" : ""}` : ""}`}>
             <div className="game-poster">
                 <img
                     src={game.cover?.url
@@ -92,9 +106,7 @@ function GameCard({ game }) {
                     alt={game.name}
                 />
                 <div className="game-overlay">
-                    <button className={`favourite-btn ${favouriteStatus ? 'active' : ''}`} onClick={handleFavouriteClick}>
-                        ♥
-                    </button>
+                    {layout !== "list" && renderFavouriteButton()}
                 </div>
             </div>
             {favouriteStatus && (
@@ -112,7 +124,10 @@ function GameCard({ game }) {
                 </div>
             )}
             <div className="game-info">
-                <h3>{game.name}</h3>
+                <div className="game-info-title">
+                    <h3>{game.name}</h3>
+                    {layout === "list" && renderFavouriteButton("game-list-favourite-btn")}
+                </div>
                 <p>
                     {game.first_release_date
                         ? new Date(game.first_release_date * 1000).toLocaleDateString()

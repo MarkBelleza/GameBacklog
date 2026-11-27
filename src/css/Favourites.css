@@ -105,6 +105,11 @@
   font-variant-numeric: tabular-nums;
 }
 
+.favourites-view-toggle {
+  grid-column: 1 / -1;
+  justify-self: end;
+}
+
 .favourites-search .search-input {
   width: 100%;
   min-width: 0;
@@ -413,6 +418,11 @@
   .favourites-toolbar .favourites-search,
   .favourites-toolbar .favourites-progress {
     grid-column: 1;
+  }
+
+  .favourites-toolbar .favourites-view-toggle {
+    grid-column: 1;
+    justify-self: start;
   }
 
   .favourites-toolbar .favourites-search {

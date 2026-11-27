@@ -3,22 +3,22 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { useGameContext } from '../contexts/GameContext';
-import Favourites from './Favourites';
+import { useGameContext } from '../../contexts/GameContext';
+import Favourites from '../Favourites';
 
-vi.mock('../contexts/GameContext', () => ({
+vi.mock('../../contexts/GameContext', () => ({
     useGameContext: vi.fn(),
 }));
 
-vi.mock('../contexts/AuthContext', () => ({
+vi.mock('../../contexts/AuthContext', () => ({
     useAuthContext: () => ({ user: null }),
 }));
 
-vi.mock('../components/GameCard', () => ({
+vi.mock('../../components/GameCard', () => ({
     default: () => null,
 }));
 
-vi.mock('../components/NoticeBox', () => ({
+vi.mock('../../components/NoticeBox', () => ({
     default: () => null,
 }));
 

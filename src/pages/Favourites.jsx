@@ -1,6 +1,8 @@
 import "../css/Favourites.css";
 import { useGameContext } from "../contexts/GameContext";
 import GameCard from "../components/GameCard";
+import GameViewToggle from "../components/GameViewToggle";
+import useGameView from "../hooks/useGameView";
 import { useAuthContext } from "../contexts/AuthContext";
 import NoticeBox from "../components/NoticeBox";
 import "../css/NoticeBox.css";
@@ -28,6 +30,7 @@ function Favourites() {
     const { user } = useAuthContext();
     const [sortBy, setSortBy] = useState("dateAdded");
     const [sortDirection, setSortDirection] = useState("desc");
+    const [gameView, setGameView] = useGameView();
     const [selectedStatuses, setSelectedStatuses] = useState(statusFilters);
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -245,10 +248,15 @@ function Favourites() {
                     </div>
                     <span className="favourites-progress-percentage">{completionPercentage}%</span>
                 </fieldset>
+                <GameViewToggle
+                    view={gameView}
+                    onChange={setGameView}
+                    className="favourites-view-toggle"
+                />
             </div>
-            <div className="games-grid">
+            <div className={`games-grid${gameView === "list" ? " games-list-view" : ""}`}>
                 {sortedFavourites.map(({ game }) => (
-                    <GameCard key={game.id} game={game} />
+                    <GameCard key={game.id} game={game} layout={gameView} />
                 ))}
             </div>
             {sortedFavourites.length === 0 && (

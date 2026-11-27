@@ -1,4 +1,6 @@
 import GameCard from "../components/GameCard";
+import GameViewToggle from "../components/GameViewToggle";
+import useGameView from "../hooks/useGameView";
 import { useState, useEffect } from "react";
 import { getPopularGames, searchGames } from "../services/api";
 import "../css/Home.css";
@@ -6,6 +8,7 @@ import "../css/Home.css";
 function Home() {
     const [searchQuery, setSearchQuery] = useState("");
     const [games, setGames] = useState([]);
+    const [gameView, setGameView] = useGameView();
 
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -67,11 +70,16 @@ function Home() {
 
 
         {/* Display the list of games */}
-        <div className="games-grid">
+        <GameViewToggle
+            view={gameView}
+            onChange={setGameView}
+            className="home-view-toggle"
+        />
+        <div className={`games-grid${gameView === "list" ? " games-list-view" : ""}`}>
             {games.map(
                 (game) => (
                     (
-                        <GameCard key={game.id} game={game} />
+                        <GameCard key={game.id} game={game} layout={gameView} />
                     )
                 )
             )}

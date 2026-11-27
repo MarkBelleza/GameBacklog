@@ -6,6 +6,8 @@ class GameBacklogHome {
     gameCardName = '.game-card .game-info h3';
     gameCard = '.game-card';
     gamesGrid = '.games-grid';
+    gridViewButton = '.game-view-toggle button:contains("Card view")';
+    listViewButton = '.game-view-toggle button:contains("List view")';
     loadingMessage = 'p:contains("Loading games...")';
 
 
@@ -59,6 +61,22 @@ class GameBacklogHome {
 
     toggleFavourite(gameName) {
         this.getGameCard(gameName).find('.favourite-btn').focus().click();
+    }
+
+    selectGridView() {
+        cy.get(this.gridViewButton).should('be.visible').click();
+    }
+
+    selectListView() {
+        cy.get(this.listViewButton).should('be.visible').click();
+    }
+
+    verifyGridViewSelected() {
+        cy.get(this.gridViewButton).should('have.attr', 'aria-pressed', 'true');
+    }
+
+    verifyListViewSelected() {
+        cy.get(this.listViewButton).should('have.attr', 'aria-pressed', 'true');
     }
 
 
