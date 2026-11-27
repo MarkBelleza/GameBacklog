@@ -50,6 +50,14 @@ function Favourites() {
     const completionPercentage = Math.round(
         ((statusCounts.finishedOrDropped) / favourites.length) * 100
     );
+    const formatProgressDetails = (label, count) => {
+        const percentage = Math.round((count / favourites.length) * 100);
+        const gameLabel = count === 1 ? "game" : "games";
+        return `${label}: ${count} ${gameLabel} (${percentage}%)`;
+    };
+    const finishedDetails = formatProgressDetails("Finished & Dropped", statusCounts.finishedOrDropped);
+    const playingDetails = formatProgressDetails("Playing", statusCounts.playing);
+    const uncategorizedDetails = formatProgressDetails("Uncategorized", statusCounts.uncategorized);
 
     const getSortValue = (game) => {
         switch (sortBy) {
@@ -231,18 +239,24 @@ function Favourites() {
                         aria-valuemin={0}
                         aria-valuemax={100}
                         aria-valuenow={completionPercentage}
-                        aria-valuetext={`${completionPercentage}% of games are playing, finished, or dropped`}
+                        aria-valuetext={`${completionPercentage}% have a completion status. ${finishedDetails}; ${playingDetails}; ${uncategorizedDetails}.`}
                     >
                         <span
                             className="favourites-progress-finished"
+                            aria-label={finishedDetails}
+                            title={finishedDetails}
                             style={{ width: `${(statusCounts.finishedOrDropped / favourites.length) * 100}%` }}
                         />
                         <span
                             className="favourites-progress-playing"
+                            aria-label={playingDetails}
+                            title={playingDetails}
                             style={{ width: `${(statusCounts.playing / favourites.length) * 100}%` }}
                         />
                         <span
                             className="favourites-progress-uncategorized"
+                            aria-label={uncategorizedDetails}
+                            title={uncategorizedDetails}
                             style={{ width: `${(statusCounts.uncategorized / favourites.length) * 100}%` }}
                         />
                     </div>

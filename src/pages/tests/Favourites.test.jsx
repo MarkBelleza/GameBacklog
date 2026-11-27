@@ -53,5 +53,13 @@ describe('Favourites completion indicator', () => {
         expect(document.querySelector('.favourites-progress-finished')).toHaveStyle({ width: '50%' });
         expect(document.querySelector('.favourites-progress-playing')).toHaveStyle({ width: '25%' });
         expect(document.querySelector('.favourites-progress-uncategorized')).toHaveStyle({ width: '25%' });
+        expect(document.querySelector('.favourites-progress-finished'))
+            .toHaveAttribute('aria-label', 'Finished & Dropped: 2 games (50%)');
+        expect(document.querySelector('.favourites-progress-finished'))
+            .toHaveAttribute('title', 'Finished & Dropped: 2 games (50%)');
+        expect(document.querySelector('.favourites-progress-playing'))
+            .toHaveAttribute('aria-label', 'Playing: 1 game (25%)');
+        expect(document.querySelector('.favourites-progress-uncategorized'))
+            .toHaveAttribute('aria-label', 'Uncategorized: 1 game (25%)');
     });
 });

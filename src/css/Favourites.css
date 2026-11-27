@@ -73,16 +73,32 @@
   flex: 1;
   min-width: 3rem;
   height: 1rem;
-  overflow: hidden;
+  overflow: visible;
   border-radius: 999px;
   background-color: #777777;
 }
 
 .favourites-progress-bar span {
+  position: relative;
   display: block;
   flex: 0 0 auto;
   min-width: 0;
   height: 100%;
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+
+.favourites-progress-bar span:first-child {
+  border-radius: 999px 0 0 999px;
+}
+
+.favourites-progress-bar span:last-child {
+  border-radius: 0 999px 999px 0;
+}
+
+.favourites-progress-bar span:hover {
+  z-index: 1;
+  filter: brightness(1.15);
+  transform: translateY(-3px);
 }
 
 .favourites-progress-finished {
